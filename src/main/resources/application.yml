@@ -1,0 +1,20 @@
+cloud:
+  aws:
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    credentials:
+      accessKey: ${MARKETBORO_SES_KEY_ID}
+      secretKey: ${MARKETBORO_SES_KEY_SECRET}
+    apiGateway:
+      baseUrl: ${MARKETBORO_API_GATEWAY}
+      username: ${MARKETBORO_API_GATEWAY_USERNAME}
+      password: ${MARKETBORO_API_GATEWAY_PASSWORD}
+    provendor:
+      content: ${MARKETBOM2_AWS_PROVENDOR_CONTENT_URL}
+    bucket:
+      public: ${MARKETBOM2_PUBLIC_BUCKET}
+      private: ${MARKETBOM2_PRIVATE_BUCKET}
+      common: # ?? ??
+        private: ${COMMON_PRIVATE_BUCKET}
