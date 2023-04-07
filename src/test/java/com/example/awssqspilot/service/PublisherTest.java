@@ -35,7 +35,7 @@ import org.springframework.messaging.support.MessageBuilder;
 @SpringBootTest
 @DisplayName("SQS FIFO Queue 동작 테스트")
 class PublisherTest {
-
+		//
 	@Autowired
 	QueueMessagingTemplate queue;
 
