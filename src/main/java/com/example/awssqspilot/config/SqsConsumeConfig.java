@@ -18,6 +18,8 @@ public class SqsConsumeConfig {
 		factory.setAmazonSqs(amazonSQSAsync);
 		factory.setMaxNumberOfMessages(10);
 		factory.setWaitTimeOut(20);// Long polling 설정 0~20
+		factory.setAutoStartup(true);
+
 		return factory;
 	}
 

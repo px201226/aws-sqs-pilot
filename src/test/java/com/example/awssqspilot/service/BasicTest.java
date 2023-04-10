@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cloud.aws.messaging.core.SqsMessageHeaders;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 
@@ -40,11 +41,15 @@ class BasicTest extends FifoTest {
 		// given
 		final var payload = MessageBuilder.withPayload("Hello world")
 				.setHeader("message-group-id", "group1")
+				.setHeader(SqsMessageHeaders.SQS_DEDUPLICATION_ID_HEADER, LocalDateTime.now().toString())
 				.build();
 
 		// when && then
 		assertDoesNotThrow(
-				() -> queue.convertAndSend(FIFO_QUEUE_NAME, payload, payload.getHeaders())
+				() -> polling(() -> {
+					queue.convertAndSend(FIFO_QUEUE_NAME, payload, payload.getHeaders());
+					return 1;
+				})
 		);
 
 		// after
@@ -68,7 +73,7 @@ class BasicTest extends FifoTest {
 		);
 
 		// then
-		final var foo = queue.receiveAndConvert(FIFO_QUEUE_NAME, Foo.class);
+		final var foo = polling(() -> queue.receiveAndConvert(FIFO_QUEUE_NAME, Foo.class));
 		assertEquals(foo, expect);
 
 	}

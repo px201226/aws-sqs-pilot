@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.aws.messaging.core.QueueMessagingTemplate;
@@ -40,6 +41,7 @@ public class FifoTest {
 	@NoArgsConstructor
 	@AllArgsConstructor
 	@EqualsAndHashCode
+	@ToString
 	public static class Foo {
 
 		String value1;

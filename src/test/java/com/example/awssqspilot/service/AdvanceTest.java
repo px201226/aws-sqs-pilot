@@ -1,5 +1,6 @@
 package com.example.awssqspilot.service;
 
+import com.amazonaws.services.sqs.model.AmazonSQSException;
 import com.amazonaws.services.sqs.model.ChangeMessageVisibilityRequest;
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 import java.time.LocalDateTime;
@@ -18,7 +19,7 @@ import org.springframework.util.StopWatch;
 public class AdvanceTest extends FifoTest {
 
 	@Test
-	@DisplayName("같은 MessageGroupId를 가지는 메시지 시퀀셜에서 선두 메시지가 처리되지 않으면 후발 메시지가 수신되지 않는다 ")
+	@DisplayName("같은 MessageGroupId를 가지는 메시지 시퀀셜에서 선두 메시지가 처리되지 않으면 후발 메시지가 수신되지 않는다(블록킹된다) ")
 	void test11() {
 
 		// given
@@ -69,6 +70,42 @@ public class AdvanceTest extends FifoTest {
 				)
 		);
 		cleanQueue(2);
+	}
+
+	@Test
+	@DisplayName("Visibility Time이 지난 메시지를 deleteMessage 하면 예외가 발생한다")
+	void Visibility_Time이_지난_메시지를_deleteMessage_하면_예외가_발생한다() throws InterruptedException {
+
+		// given
+		queue.send(FIFO_QUEUE_NAME,
+				MessageBuilder.withPayload(1)
+						.setHeader(SqsMessageHeaders.SQS_GROUP_ID_HEADER, LocalDateTime.now().toString())
+						.build()
+		);
+
+		log.info("send message");
+
+		final var receiveMessageResult = polling(() -> amazonSQS.receiveMessage(
+				new ReceiveMessageRequest(FIFO_QUEUE_URL).withAttributeNames("All").withWaitTimeSeconds(20)
+		));
+
+		amazonSQS.changeMessageVisibility(
+				new ChangeMessageVisibilityRequest(
+						FIFO_QUEUE_URL,
+						receiveMessageResult.getMessages().get(0).getReceiptHandle(),
+						3
+				)
+		);
+
+		log.info("receive and Sleep 10s");
+		Thread.sleep(10000);
+
+		// when && then
+		Assertions.assertThrows(AmazonSQSException.class, () ->
+				amazonSQS.deleteMessage(FIFO_QUEUE_URL, receiveMessageResult.getMessages().get(0).getReceiptHandle())
+		);
+
+
 	}
 
 }

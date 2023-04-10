@@ -36,6 +36,7 @@ public class SqsPublishConfig {
 		converter.setObjectMapper(objectMapper);
 		converter.setSerializedPayloadClass(String.class);
 		converter.setStrictContentTypeMatch(false);
+		
 		return converter;
 	}
 }

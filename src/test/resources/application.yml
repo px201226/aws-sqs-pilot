@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev
+    active: test
   datasource:
     testOnBorrow: true
     driver-class-name: ${MARKETBOM2_DATASOURCE_DRIVER}
