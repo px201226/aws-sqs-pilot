@@ -1,4 +1,4 @@
-package com.example.awssqspilot.controller;
+package com.example.awssqspilot.springboot.controller;
 
 
 import lombok.AllArgsConstructor;
