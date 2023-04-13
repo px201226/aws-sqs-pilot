@@ -11,7 +11,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 
-@Profile("dev")
+@Profile("test")
 @Slf4j
 @Component
 public class MyListener {

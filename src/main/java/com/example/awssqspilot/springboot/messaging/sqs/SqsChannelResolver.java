@@ -1,6 +1,6 @@
-package com.example.awssqspilot.springboot.event.sqs.message;
+package com.example.awssqspilot.springboot.messaging.sqs;
 
-import com.example.awssqspilot.event.channel.MessageChannel;
+import com.example.awssqspilot.messaging.channel.MessageChannel;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -14,8 +14,13 @@ public class SqsChannelResolver {
 			MessageChannel.MASS_DATA_REG_CHANNEL
 	);
 
+	public boolean isSupportChannel(MessageChannel messageChannel) {
+		return supportChannels.contains(messageChannel);
+	}
+
 	public String resolve(MessageChannel messageChannel) {
-		if (!supportChannels.contains(messageChannel)) {
+
+		if (!isSupportChannel(messageChannel)) {
 			throw new IllegalArgumentException();
 		}
 

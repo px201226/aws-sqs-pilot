@@ -1,4 +1,4 @@
-package com.example.awssqspilot.event.channel;
+package com.example.awssqspilot.messaging.channel;
 
 public enum MessageChannel {
 

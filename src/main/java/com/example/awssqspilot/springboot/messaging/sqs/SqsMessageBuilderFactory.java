@@ -1,4 +1,4 @@
-package com.example.awssqspilot.springboot.event.sqs.message;
+package com.example.awssqspilot.springboot.messaging.sqs;
 
 import static org.springframework.cloud.aws.messaging.core.SqsMessageHeaders.SQS_DEDUPLICATION_ID_HEADER;
 import static org.springframework.cloud.aws.messaging.core.SqsMessageHeaders.SQS_GROUP_ID_HEADER;

@@ -18,6 +18,21 @@ spring:
       jdbcUrl: ${MARKETBOM2_DATASOURCE_URL}
       username: ${MARKETBOM2_DATASOURCE_USERNAME}
       password: ${MARKETBOM2_DATASOURCE_PASSWORD}
+  jpa:
+    properties:
+      hibernate:
+        default_batch_fetch_size: 500
+        order_inserts: true
+        order_updates: true
+        jdbc:
+          batch_size: 100
+        query:
+          in_clause_parameter_padding: true
+    hibernate:
+      ddl-auto: validate
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    generate-ddl: false
 
 cloud:
   aws:

@@ -1,8 +1,8 @@
-package com.example.awssqspilot.springboot.event.sqs.message;
+package com.example.awssqspilot.springboot.messaging.sqs;
 
 import static org.springframework.cloud.aws.messaging.core.SqsMessageHeaders.SQS_DEDUPLICATION_ID_HEADER;
 
-import com.example.awssqspilot.event.message.MessageSupplier;
+import com.example.awssqspilot.messaging.message.MessageSupplier;
 import java.util.Map;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
@@ -28,7 +28,7 @@ public class SqsMessageGroupBuilder<T> {
 		return this;
 	}
 
-	public MessageSupplier<Message<T>> make() {
+	public MessageSupplier<Message<T>> get() {
 		return () -> {
 			final var message = MessageBuilder.createMessage(payload, new MessageHeaders(headers));
 			final var nextDeduplicationId = Integer.parseInt(headers.getOrDefault(SQS_DEDUPLICATION_ID_HEADER, "1").toString()) + 1;

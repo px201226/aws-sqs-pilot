@@ -1,4 +1,4 @@
-package com.example.awssqspilot.event.message;
+package com.example.awssqspilot.messaging.message;
 
 @FunctionalInterface
 public interface MessageSupplier<T> {
