@@ -1,6 +1,6 @@
 package com.example.awssqspilot.domain.event;
 
-public enum EventName {
+public enum EventType {
 
 	REGISTER_MASS_REG
 }

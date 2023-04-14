@@ -1,7 +1,6 @@
 package com.example.awssqspilot.domain.event;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.istack.NotNull;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
@@ -22,9 +21,7 @@ import org.springframework.data.domain.Persistable;
 @Builder(builderMethodName = "entityBuilder", toBuilder = true)
 @NoArgsConstructor @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Entity @Table(name = "EVENT_MESSAGE", catalog = "MARKETBOM2_SCHM")
-public class EventMessage implements Persistable<String> {
-
-
+public class ApplicationEvent implements Persistable<String> {
 	@Id
 	@Column(name = "EVENT_ID", nullable = false)
 	private String eventId;
@@ -42,7 +39,7 @@ public class EventMessage implements Persistable<String> {
 	private EventStatus eventStatus;
 
 	@Column(name = "EVENT_NAME", nullable = false) @Enumerated(EnumType.STRING)
-	private EventName eventName;
+	private EventType eventType;
 
 	@Column(name = "EVENT_PAYLOAD", columnDefinition = "JSON")
 	private String eventPayload;
@@ -59,12 +56,12 @@ public class EventMessage implements Persistable<String> {
 	@Transient
 	private String a;
 
-	public static EventMessage createEvent(
+	public static ApplicationEvent createEvent(
 			@NotNull final String eventId,
 			@NotNull final String eventGroupId,
 			@NotNull final Long bizGroupNo,
 			@NotNull final String bizCd,
-			@NotNull final EventName eventName,
+			@NotNull final EventType eventType,
 			@NotNull final String eventPayload
 	) {
 		return entityBuilder()
@@ -73,7 +70,7 @@ public class EventMessage implements Persistable<String> {
 				.bizGroupNo(bizGroupNo)
 				.bizCd(bizCd)
 				.eventStatus(EventStatus.PUBLISHED)
-				.eventName(eventName)
+				.eventType(eventType)
 				.eventPayload(eventPayload)
 				.regNo(0L)
 				.regDt(LocalDateTime.now())

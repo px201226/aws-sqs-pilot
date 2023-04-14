@@ -23,12 +23,6 @@ public class SpringMessagePublisher<T> implements MessagePublisher<T, Boolean> {
 		return SPRING_EVENT_CHANNEL.equals(messageChannel);
 	}
 
-	@EventListener
-	public void eventHandleMethod(RequestHandledEvent event) {
-		//HTTP 요청을 처리했을 때 발생하는 이벤트
-		System.out.println("처리완료");
-	}
-
 	@Override public MessageSender<T, Boolean> getMessageSender() {
 		return (channel, message) -> {
 			log.info("channel={}, message={}", channel, message);

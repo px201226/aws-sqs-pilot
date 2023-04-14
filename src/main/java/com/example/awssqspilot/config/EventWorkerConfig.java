@@ -18,7 +18,7 @@ public class EventWorkerConfig {
 
 	private final TransactionTemplate transactionTemplate;
 	private static final int THREAD_WAIT_TIME = 5000; // mill second
-	private static int poolSize = 100;
+	private static int poolSize = 15;
 
 	@Bean(name = "eventWorkerPool")
 	public ThreadPoolTaskExecutor eventWorkerPool() {

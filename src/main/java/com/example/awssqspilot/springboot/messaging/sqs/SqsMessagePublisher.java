@@ -3,16 +3,16 @@ package com.example.awssqspilot.springboot.messaging.sqs;
 import com.example.awssqspilot.messaging.channel.MessageChannel;
 import com.example.awssqspilot.messaging.message.MessagePublisher;
 import com.example.awssqspilot.messaging.message.MessageSender;
-import com.example.awssqspilot.messaging.message.OrderingEventMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.aws.messaging.core.QueueMessagingTemplate;
+import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class SqsMessagePublisher<T extends OrderingEventMessage> implements MessagePublisher<OrderingEventMessage, Boolean> {
+public class SqsMessagePublisher<T extends Message> implements MessagePublisher<Message, Boolean> {
 
 	private final QueueMessagingTemplate queueMessagingTemplate;
 	private final SqsChannelResolver resolver;
@@ -21,15 +21,12 @@ public class SqsMessagePublisher<T extends OrderingEventMessage> implements Mess
 		return resolver.isSupportChannel(messageChannel);
 	}
 
-	@Override public MessageSender<OrderingEventMessage, Boolean> getMessageSender() {
+	@Override public MessageSender<Message, Boolean> getMessageSender() {
 		return (channel, message) -> {
-
-			final var sqsMessage = SqsMessageBuilder.from(message);
-
 			queueMessagingTemplate.convertAndSend(
 					resolver.resolve(channel),
-					sqsMessage.getPayload(),
-					sqsMessage.getHeaders()
+					message.getPayload(),
+					message.getHeaders()
 			);
 
 			log.info("send message : {}", message);
