@@ -27,7 +27,7 @@ public class RestController {
 	@Transactional
 	public void send(@RequestBody Foo foo) {
 
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 1; i++) {
 			final var registeredBizSlipTrade = new RegisteredBizSlipTrade
 					(1L, "00001", LocalDateTime.now(), UuidUtils.generateUuid(), UuidUtils.generateUuid(), String.valueOf(i));
 			springMessagePublisher.send(MessageChannel.SPRING_EVENT_CHANNEL, registeredBizSlipTrade);

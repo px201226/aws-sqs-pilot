@@ -2,10 +2,12 @@ package com.example.awssqspilot.domain.listener;
 
 
 import com.example.awssqspilot.domain.dto.DomainEventModel;
+import com.example.awssqspilot.domain.event.EventType;
 import com.example.awssqspilot.domain.service.ApplicationEventService;
 import com.example.awssqspilot.messaging.channel.MessageChannel;
 import com.example.awssqspilot.messaging.message.MessagePublisher;
 import com.example.awssqspilot.messaging.model.ApplicationEventMessage;
+import com.example.awssqspilot.springboot.messaging.annotation.EventTypeMapping;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
@@ -34,8 +36,8 @@ public class DomainEventListener {
 	 * applicationEventPublisher.publishEvent(message)
 	 */
 	@EventListener
-	public void mark(Object o) {
-
+	public void mark(DomainEventModel.RegisteredBizSlipTrade event) {
+		System.out.println("d");
 	}
 
 
@@ -59,6 +61,11 @@ public class DomainEventListener {
 			put(SqsMessageHeaders.SQS_GROUP_ID_HEADER, event.getMessageGroupId());
 			put(SqsMessageHeaders.SQS_DEDUPLICATION_ID_HEADER, event.getDeduplicationId());
 		}};
+	}
+
+	@EventTypeMapping(eventType = EventType.REGISTER_MASS_REG)
+	public void aa(){
+
 	}
 
 
