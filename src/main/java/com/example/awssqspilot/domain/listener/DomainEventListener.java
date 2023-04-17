@@ -8,12 +8,13 @@ import com.example.awssqspilot.messaging.channel.MessageChannel;
 import com.example.awssqspilot.messaging.message.MessagePublisher;
 import com.example.awssqspilot.messaging.model.ApplicationEventMessage;
 import com.example.awssqspilot.springboot.messaging.annotation.EventTypeMapping;
+import com.example.awssqspilot.springboot.messaging.sqs.SqsMessageHeaders;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
+import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cloud.aws.messaging.core.SqsMessageHeaders;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
@@ -30,6 +31,7 @@ public class DomainEventListener {
 	private final MessagePublisher<Message, Boolean> sqsMessagePublisher;
 	private final ApplicationEventService applicationEventService;
 	private final ObjectMapper objectMapper;
+	private final EntityManager entityManager;
 
 	/**
 	 * 인텔리제이에서 아래 코드 옆에 헤드셋을 누르면 여기로 온다.
@@ -44,7 +46,8 @@ public class DomainEventListener {
 	@EventListener
 	@TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
 	public void sqsPublishListener(DomainEventModel.RegisteredBizSlipTrade event) throws JsonProcessingException {
-		log.info("Spring Event received : {}", event);
+
+		entityManager.flush();
 
 		final var applicationEvent = applicationEventService.recordApplicationEvent(event, objectMapper.writeValueAsString(event));
 		final var applicationEventMessage = ApplicationEventMessage.from(applicationEvent);
@@ -60,12 +63,15 @@ public class DomainEventListener {
 		return new HashMap<>() {{
 			put(SqsMessageHeaders.SQS_GROUP_ID_HEADER, event.getMessageGroupId());
 			put(SqsMessageHeaders.SQS_DEDUPLICATION_ID_HEADER, event.getDeduplicationId());
+			put(SqsMessageHeaders.SQS_EVENT_TYPE, EventType.REGISTER_MASS_REG.toString());
 		}};
 	}
 
 	@EventTypeMapping(eventType = EventType.REGISTER_MASS_REG)
-	public void aa(){
-
+	public void aa(DomainEventModel.RegisteredBizSlipTrade event) throws InterruptedException {
+		log.info("begin biz Logic, {}", event.getEventId());
+		Thread.sleep(15000L);
+		log.info("end biz Logic, {}", event.getEventId());
 	}
 
 

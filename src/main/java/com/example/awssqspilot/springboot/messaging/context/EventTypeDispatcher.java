@@ -2,6 +2,8 @@ package com.example.awssqspilot.springboot.messaging.context;
 
 
 import com.example.awssqspilot.domain.event.EventType;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.lang.reflect.InvocationTargetException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +18,7 @@ public class EventTypeDispatcher {
 
 	private final EventTypeMappingMethodProcessor processor;
 	private final ApplicationContext applicationContext;
+	private final ObjectMapper objectMapper;
 
 	public Object doDispatch(EventType eventType, Object payLoad) {
 
@@ -32,11 +35,16 @@ public class EventTypeDispatcher {
 		ReflectionUtils.makeAccessible(method);
 
 		try {
-			return method.invoke(payLoad);
+			final Class<?>[] parameterTypes = method.getParameterTypes();
+			final Class<?> parameterType = parameterTypes[0];
+			final Object o = objectMapper.readValue(payLoad.toString(), parameterType);
+			return method.invoke(targetBean, o);
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
 		}
 
 		return null;

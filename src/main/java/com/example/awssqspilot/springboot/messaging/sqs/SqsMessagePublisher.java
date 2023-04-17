@@ -29,7 +29,7 @@ public class SqsMessagePublisher<T extends Message> implements MessagePublisher<
 					message.getHeaders()
 			);
 
-			log.info("send message : {}", message);
+//			log.info("send message : {}", message);
 			return true;
 		};
 	}

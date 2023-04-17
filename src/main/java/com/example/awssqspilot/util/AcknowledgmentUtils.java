@@ -7,6 +7,7 @@ public class AcknowledgmentUtils {
 
 	/**
 	 * ack 응답을 보내고 CheckedException을 UnCheckedException으로 변환한다.
+	 * 중요!! 수신메시지가 DLQ로 이동한뒤 Ack를 날려도 exception이 발생하지 않는다!!!
 	 * @param acknowledgment
 	 */
 	public static void ack(Acknowledgment acknowledgment){

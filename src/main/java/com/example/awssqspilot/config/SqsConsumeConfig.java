@@ -19,7 +19,7 @@ public class SqsConsumeConfig {
 		factory.setMaxNumberOfMessages(10);
 		factory.setWaitTimeOut(20);// Long polling 설정 0~20
 		factory.setAutoStartup(true);
-
+		factory.setBackOffTime(5000L);
 		return factory;
 	}
 

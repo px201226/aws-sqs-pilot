@@ -4,12 +4,14 @@ import com.example.awssqspilot.domain.event.EventSource;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 public class DomainEventModel {
 
 
 	@Data
 	@AllArgsConstructor
+	@NoArgsConstructor
 	public static class RegisteredBizSlipTrade implements EventSource {
 
 		private Long bizGroupNo;

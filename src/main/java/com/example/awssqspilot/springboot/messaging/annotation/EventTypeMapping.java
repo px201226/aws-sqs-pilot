@@ -14,5 +14,6 @@ import org.springframework.stereotype.Component;
 @Component
 public @interface EventTypeMapping {
 
+
 	EventType eventType();
 }

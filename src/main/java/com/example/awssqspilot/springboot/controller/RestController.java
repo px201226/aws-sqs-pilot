@@ -32,6 +32,7 @@ public class RestController {
 					(1L, "00001", LocalDateTime.now(), UuidUtils.generateUuid(), UuidUtils.generateUuid(), String.valueOf(i));
 			springMessagePublisher.send(MessageChannel.SPRING_EVENT_CHANNEL, registeredBizSlipTrade);
 		}
+		log.info("끝=============");
 	}
 
 	@PostMapping("/api/post/bar")

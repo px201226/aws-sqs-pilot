@@ -17,8 +17,8 @@ import org.springframework.transaction.support.TransactionTemplate;
 public class EventWorkerConfig {
 
 	private final TransactionTemplate transactionTemplate;
-	private static final int THREAD_WAIT_TIME = 5000; // mill second
-	private static int poolSize = 15;
+	private static final int THREAD_WAIT_TIME = 100; // mill second
+	private static int poolSize = 10;
 
 	@Bean(name = "eventWorkerPool")
 	public ThreadPoolTaskExecutor eventWorkerPool() {
