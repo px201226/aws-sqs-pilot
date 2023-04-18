@@ -1,9 +1,8 @@
-package com.example.awssqspilot.springboot.listener;
+package com.example.awssqspilot.messaging.concrete.sqs;
 
-import com.example.awssqspilot.domain.event.EventType;
-import com.example.awssqspilot.domain.model.ApplicationEventMessage;
-import com.example.awssqspilot.messaging.context.EventTypeDispatcher;
-import com.example.awssqspilot.messaging.concrete.sqs.SqsMessageHeaders;
+import com.example.awssqspilot.messaging.context.MessageTypeDispatcher;
+import com.example.awssqspilot.messaging.message.MessageHandlerCallback;
+import com.example.awssqspilot.messaging.message.MessageType;
 import com.example.awssqspilot.util.AcknowledgmentUtils;
 import java.util.concurrent.RejectedExecutionException;
 import lombok.RequiredArgsConstructor;
@@ -23,15 +22,15 @@ public class SqsMessageHandler {
 
 	private final TransactionTemplate transactionTemplate;
 	private final AsyncTaskExecutor eventWorkerPool;
-	private final EventTypeDispatcher eventTypeDispatcher;
+	private final MessageTypeDispatcher messageTypeDispatcher;
 	@Value("${cloud.aws.sqs.backOffTime}")
 	private Long backOffTime;
 
 	public void handle(
-			final ApplicationEventMessage message,
+			final SqsMessage message,
 			final MessageHeaders messageHeaders,
 			final Acknowledgment acknowledgment,
-			final MessageHandlerCallback<ApplicationEventMessage, Object> callback
+			final MessageHandlerCallback<SqsMessage, Object> callback
 	) {
 		try {
 			eventWorkerPool.submit(() -> {
@@ -71,16 +70,14 @@ public class SqsMessageHandler {
 
 	}
 
-	private Object doTransaction(final ApplicationEventMessage message, final MessageHeaders messageHeaders, final Acknowledgment acknowledgment,
-			final MessageHandlerCallback<ApplicationEventMessage, Object> callback) {
+	private Object doTransaction(final SqsMessage message, final MessageHeaders messageHeaders, final Acknowledgment acknowledgment,
+			final MessageHandlerCallback<SqsMessage, Object> callback) {
 
 		if (callback != null) {
 			callback.onStart(message, messageHeaders);
 		}
 
-		EventType eventType = getEventType(messageHeaders);
-
-		final Object result = eventTypeDispatcher.doDispatch(eventType, message.getEventPayload());
+		final Object result = messageTypeDispatcher.doDispatch(getMessageType(messageHeaders), message.getPayload());
 
 		AcknowledgmentUtils.ack(acknowledgment);
 
@@ -91,8 +88,8 @@ public class SqsMessageHandler {
 		return result;
 	}
 
-	private EventType getEventType(final MessageHeaders messageHeaders) {
-		return EventType.from(messageHeaders.get(SqsMessageHeaders.SQS_EVENT_TYPE).toString());
+	private MessageType getMessageType(final MessageHeaders messageHeaders) {
+		return new MessageType(messageHeaders.get(SqsMessageHeaders.SQS_EVENT_TYPE).toString());
 	}
 
 

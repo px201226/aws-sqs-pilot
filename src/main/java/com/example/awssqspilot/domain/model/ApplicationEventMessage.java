@@ -3,6 +3,7 @@ package com.example.awssqspilot.domain.model;
 import com.example.awssqspilot.domain.event.ApplicationEvent;
 import com.example.awssqspilot.domain.event.EventStatus;
 import com.example.awssqspilot.domain.event.EventType;
+import com.example.awssqspilot.messaging.concrete.sqs.SqsMessage;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +16,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 @ToString
-public class ApplicationEventMessage {
+public class ApplicationEventMessage implements SqsMessage {
 
 	private String eventId;
 
@@ -36,6 +37,10 @@ public class ApplicationEventMessage {
 	private LocalDateTime regDt;
 
 	private LocalDateTime updDt;
+
+	@Override public String getPayload() {
+		return eventPayload;
+	}
 
 	public static ApplicationEventMessage from(ApplicationEvent applicationEvent) {
 		return ApplicationEventMessage.builder()

@@ -3,6 +3,7 @@ package com.example.awssqspilot.springboot.listener;
 
 import com.example.awssqspilot.domain.model.ApplicationEventMessage;
 import com.example.awssqspilot.messaging.concrete.sqs.SqsChannelResolver;
+import com.example.awssqspilot.messaging.concrete.sqs.SqsMessageHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.aws.messaging.listener.Acknowledgment;

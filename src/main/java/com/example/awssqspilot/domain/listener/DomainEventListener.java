@@ -7,8 +7,9 @@ import com.example.awssqspilot.domain.service.ApplicationEventService;
 import com.example.awssqspilot.messaging.channel.MessageChannel;
 import com.example.awssqspilot.messaging.message.MessagePublisher;
 import com.example.awssqspilot.domain.model.ApplicationEventMessage;
-import com.example.awssqspilot.messaging.annotation.EventTypeMapping;
+import com.example.awssqspilot.messaging.annotation.MessageTypeMapping;
 import com.example.awssqspilot.messaging.concrete.sqs.SqsMessageHeaders;
+import com.example.awssqspilot.messaging.message.MessageType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
@@ -66,7 +67,7 @@ public class DomainEventListener {
 		}};
 	}
 
-	@EventTypeMapping(eventType = EventType.REGISTER_MASS_REG)
+	@MessageTypeMapping(messageType = EventType.EVENT_REGISTER_MASS_REG)
 	public void aa(DomainEventModel.RegisteredBizSlipTrade event) throws InterruptedException {
 		log.info("begin biz Logic, {}", event.getEventId());
 		Thread.sleep(3000L);

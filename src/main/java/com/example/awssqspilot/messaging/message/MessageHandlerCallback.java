@@ -1,4 +1,4 @@
-package com.example.awssqspilot.springboot.listener;
+package com.example.awssqspilot.messaging.message;
 
 import org.springframework.messaging.MessageHeaders;
 

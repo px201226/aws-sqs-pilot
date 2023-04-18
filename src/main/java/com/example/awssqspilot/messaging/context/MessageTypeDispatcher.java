@@ -1,7 +1,7 @@
 package com.example.awssqspilot.messaging.context;
 
 
-import com.example.awssqspilot.domain.event.EventType;
+import com.example.awssqspilot.messaging.message.MessageType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.lang.reflect.InvocationTargetException;
@@ -14,23 +14,23 @@ import org.springframework.util.ReflectionUtils;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class EventTypeDispatcher {
+public class MessageTypeDispatcher {
 
-	private final EventTypeMappingMethodProcessor processor;
+	private final MessageTypeMappingMethodProcessor processor;
 	private final ApplicationContext applicationContext;
 	private final ObjectMapper objectMapper;
 
-	public Object doDispatch(EventType eventType, Object payLoad) {
+	public Object doDispatch(MessageType messageType, Object payLoad) {
 
-		final var eventTypeAdvice = processor.getEventTypeAdvice(eventType);
+		final var advice = processor.getMessageTypeAdvice(messageType);
 
-		if (eventTypeAdvice == null) {
-			log.info("not found EventTypeMapping bean for EventType. eventType = {}", eventType);
+		if (advice == null) {
+			log.info("not found MessageTypeMapping bean for EventType. eventType = {}", messageType);
 			return null;
 		}
 
-		final var beanName = eventTypeAdvice.getBeanName();
-		final var method = eventTypeAdvice.getMethod();
+		final var beanName = advice.getBeanName();
+		final var method = advice.getMethod();
 		final var targetBean = getTargetBean(beanName);
 
 		if (targetBean == null) {

@@ -6,6 +6,7 @@ public enum EventType {
 
 	REGISTER_MASS_REG;
 
+	public static final String EVENT_REGISTER_MASS_REG = "REGISTER_MASS_REG";
 
 	public static EventType from(String value){
 		return Arrays.stream(EventType.values())

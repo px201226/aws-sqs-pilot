@@ -40,8 +40,5 @@ public class RestController {
 		log.info("끝============={}", stopWatch.getTotalTimeMillis());
 	}
 
-	@PostMapping("/api/post/bar")
-	public void send(@RequestBody Bar bar) {
 
-	}
 }

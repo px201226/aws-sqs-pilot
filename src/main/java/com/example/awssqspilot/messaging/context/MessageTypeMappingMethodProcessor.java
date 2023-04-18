@@ -1,8 +1,8 @@
 package com.example.awssqspilot.messaging.context;
 
 
-import com.example.awssqspilot.domain.event.EventType;
-import com.example.awssqspilot.messaging.annotation.EventTypeMapping;
+import com.example.awssqspilot.messaging.annotation.MessageTypeMapping;
+import com.example.awssqspilot.messaging.message.MessageType;
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -26,15 +26,15 @@ import org.springframework.util.ClassUtils;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class EventTypeMappingMethodProcessor {
+public class MessageTypeMappingMethodProcessor {
 
 
 	private final ConfigurableListableBeanFactory beanFactory;
-	private final Map<EventType, EventTypeAdvice> eventTypeAdviceMap;
+	private final Map<MessageType, MessageTypeAdvice> messageTypeAdviceMap;
 
 
-	public EventTypeAdvice getEventTypeAdvice(EventType eventType){
-		return eventTypeAdviceMap.get(eventType);
+	public MessageTypeAdvice getMessageTypeAdvice(com.example.awssqspilot.messaging.message.MessageType messageType) {
+		return messageTypeAdviceMap.get(messageType);
 	}
 
 	@PostConstruct
@@ -54,22 +54,22 @@ public class EventTypeMappingMethodProcessor {
 		if (AnnotationUtils.isCandidateClass(targetType, EventListener.class) &&
 				!isSpringContainerClass(targetType)) {
 
-			Map<Method, EventTypeMapping> annotatedMethods = null;
+			Map<Method, MessageTypeMapping> annotatedMethods = null;
 
 			final var methodToAnnotation = MethodIntrospector.selectMethods(targetType,
-					(MetadataLookup<EventTypeMapping>) method ->
-							AnnotatedElementUtils.findMergedAnnotation(method, EventTypeMapping.class));
+					(MetadataLookup<MessageTypeMapping>) method ->
+							AnnotatedElementUtils.findMergedAnnotation(method, MessageTypeMapping.class));
 
-			for (final Entry<Method, EventTypeMapping> entry : methodToAnnotation.entrySet()) {
+			for (final Entry<Method, MessageTypeMapping> entry : methodToAnnotation.entrySet()) {
 				final var annotation = entry.getValue();
 				final var method = entry.getKey();
 
-				if (eventTypeAdviceMap.containsKey(annotation.eventType())) {
-					log.info("중복 정의 된 이벤트 타입 : {}", annotation.eventType());
-					throw new RuntimeException("eventTypeMapper가 중복으로 정의되어 있음, " + annotation.eventType());
+				if (messageTypeAdviceMap.containsKey(annotation.messageType())) {
+					log.info("중복 정의 된 메시지 타입 : {}", annotation.messageType());
+					throw new RuntimeException("MessageTypeMapping이 중복으로 정의되어 있음, " + annotation.messageType());
 				}
 
-				eventTypeAdviceMap.put(annotation.eventType(), new EventTypeAdvice(beanName, method));
+				messageTypeAdviceMap.put(new MessageType(annotation.messageType()), new MessageTypeAdvice(beanName, method));
 
 			}
 
@@ -84,7 +84,7 @@ public class EventTypeMappingMethodProcessor {
 
 	@Getter
 	@AllArgsConstructor
-	protected static class EventTypeAdvice {
+	protected static class MessageTypeAdvice {
 
 		private String beanName;
 		private Method method;

@@ -1,6 +1,7 @@
 package com.example.awssqspilot.messaging.annotation;
 
 import com.example.awssqspilot.domain.event.EventType;
+import com.example.awssqspilot.messaging.message.MessageType;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -12,8 +13,8 @@ import org.springframework.stereotype.Component;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Component
-public @interface EventTypeMapping {
+public @interface MessageTypeMapping {
 
 
-	EventType eventType();
+	String messageType();
 }
