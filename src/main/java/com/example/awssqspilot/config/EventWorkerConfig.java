@@ -17,7 +17,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 public class EventWorkerConfig {
 
 	private final TransactionTemplate transactionTemplate;
-	private static final int THREAD_WAIT_TIME = 100; // mill second
+	private static final int THREAD_WAIT_TIME = 5000; // mill second
 	private static int poolSize = 10;
 
 	@Bean(name = "eventWorkerPool")
@@ -25,7 +25,7 @@ public class EventWorkerConfig {
 		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 		executor.setMaxPoolSize(poolSize);
 		executor.setQueueCapacity(0);
-		executor.setTaskDecorator(new TransactionTaskDecorator(transactionTemplate));
+//		executor.setTaskDecorator(new TransactionTaskDecorator(transactionTemplate));
 		executor.setRejectedExecutionHandler(new BlockingTaskSubmissionPolicy(THREAD_WAIT_TIME));
 		return executor;
 	}
@@ -39,9 +39,10 @@ public class EventWorkerConfig {
 						status -> {
 							try {
 								runnable.run();
-							} catch (Throwable e) {
+							} catch (Exception e) {
+								System.out.println("dddddd");
 								e.printStackTrace();
-								status.setRollbackOnly();
+								throw e;/**/
 							}
 						}
 				);

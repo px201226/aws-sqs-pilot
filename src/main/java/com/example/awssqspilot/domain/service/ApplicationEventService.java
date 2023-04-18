@@ -1,10 +1,9 @@
 package com.example.awssqspilot.domain.service;
 
 import com.example.awssqspilot.domain.event.ApplicationEvent;
-import com.example.awssqspilot.domain.event.EventMessageRepository;
+import com.example.awssqspilot.domain.event.ApplicationEventRepository;
 import com.example.awssqspilot.domain.event.EventSource;
 import com.example.awssqspilot.domain.event.EventType;
-import com.example.awssqspilot.springboot.messaging.annotation.EventTypeMapping;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ApplicationEventService {
 
-	private final EventMessageRepository eventMessageRepository;
+	private final ApplicationEventRepository applicationEventRepository;
 
 	@Transactional
 	public ApplicationEvent recordApplicationEvent(final EventSource event, final String eventPayload) {
@@ -28,6 +27,6 @@ public class ApplicationEventService {
 				eventPayload
 		);
 
-		return eventMessageRepository.save(applicationEvent);
+		return applicationEventRepository.save(applicationEvent);
 	}
 }

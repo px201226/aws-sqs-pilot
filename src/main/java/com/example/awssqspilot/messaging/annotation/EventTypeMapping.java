@@ -1,4 +1,4 @@
-package com.example.awssqspilot.springboot.messaging.annotation;
+package com.example.awssqspilot.messaging.annotation;
 
 import com.example.awssqspilot.domain.event.EventType;
 import java.lang.annotation.Documented;

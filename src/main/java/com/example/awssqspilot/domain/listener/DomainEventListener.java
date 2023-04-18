@@ -6,9 +6,9 @@ import com.example.awssqspilot.domain.event.EventType;
 import com.example.awssqspilot.domain.service.ApplicationEventService;
 import com.example.awssqspilot.messaging.channel.MessageChannel;
 import com.example.awssqspilot.messaging.message.MessagePublisher;
-import com.example.awssqspilot.messaging.model.ApplicationEventMessage;
-import com.example.awssqspilot.springboot.messaging.annotation.EventTypeMapping;
-import com.example.awssqspilot.springboot.messaging.sqs.SqsMessageHeaders;
+import com.example.awssqspilot.domain.model.ApplicationEventMessage;
+import com.example.awssqspilot.messaging.annotation.EventTypeMapping;
+import com.example.awssqspilot.messaging.concrete.sqs.SqsMessageHeaders;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
@@ -45,9 +45,7 @@ public class DomainEventListener {
 
 	@EventListener
 	@TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
-	public void sqsPublishListener(DomainEventModel.RegisteredBizSlipTrade event) throws JsonProcessingException {
-
-		entityManager.flush();
+	public void sqsPublishListener(DomainEventModel.RegisteredBizSlipTrade event) throws JsonProcessingException, InterruptedException {
 
 		final var applicationEvent = applicationEventService.recordApplicationEvent(event, objectMapper.writeValueAsString(event));
 		final var applicationEventMessage = ApplicationEventMessage.from(applicationEvent);
@@ -57,6 +55,7 @@ public class DomainEventListener {
 				MessageBuilder.createMessage(applicationEventMessage, new MessageHeaders(getSqsMessageHeader(event)))
 		);
 
+//		Thread.sleep(13000L);
 	}
 
 	private HashMap<String, Object> getSqsMessageHeader(final DomainEventModel.RegisteredBizSlipTrade event) {
@@ -70,7 +69,7 @@ public class DomainEventListener {
 	@EventTypeMapping(eventType = EventType.REGISTER_MASS_REG)
 	public void aa(DomainEventModel.RegisteredBizSlipTrade event) throws InterruptedException {
 		log.info("begin biz Logic, {}", event.getEventId());
-		Thread.sleep(15000L);
+		Thread.sleep(3000L);
 		log.info("end biz Logic, {}", event.getEventId());
 	}
 

@@ -1,8 +1,8 @@
-package com.example.awssqspilot.springboot.messaging.context;
+package com.example.awssqspilot.messaging.context;
 
 
 import com.example.awssqspilot.domain.event.EventType;
-import com.example.awssqspilot.springboot.messaging.annotation.EventTypeMapping;
+import com.example.awssqspilot.messaging.annotation.EventTypeMapping;
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Map.Entry;

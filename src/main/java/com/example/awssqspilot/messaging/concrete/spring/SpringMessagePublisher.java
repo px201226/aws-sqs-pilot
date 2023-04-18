@@ -1,4 +1,4 @@
-package com.example.awssqspilot.springboot.messaging.spring;
+package com.example.awssqspilot.messaging.concrete.spring;
 
 import static com.example.awssqspilot.messaging.channel.MessageChannel.SPRING_EVENT_CHANNEL;
 

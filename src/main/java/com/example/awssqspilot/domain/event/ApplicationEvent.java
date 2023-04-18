@@ -4,6 +4,7 @@ package com.example.awssqspilot.domain.event;
 import com.sun.istack.NotNull;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -20,8 +21,9 @@ import org.springframework.data.domain.Persistable;
 @Getter
 @Builder(builderMethodName = "entityBuilder", toBuilder = true)
 @NoArgsConstructor @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Entity @Table(name = "EVENT_MESSAGE", catalog = "MARKETBOM2_SCHM")
+@Entity @Table(name = "APPLICATION_EVENT", catalog = "MARKETBOM2_SCHM")
 public class ApplicationEvent implements Persistable<String> {
+
 	@Id
 	@Column(name = "EVENT_ID", nullable = false)
 	private String eventId;
@@ -35,10 +37,11 @@ public class ApplicationEvent implements Persistable<String> {
 	@Column(name = "BIZ_CD", nullable = false)
 	private String bizCd;
 
-	@Column(name = "EVENT_STATUS", nullable = false) @Enumerated(EnumType.STRING)
+	@Convert(converter = EventStatusConverter.class)
+	@Column(name = "EVENT_STATUS", columnDefinition = "TINYINT", length = 1, nullable = false)
 	private EventStatus eventStatus;
 
-	@Column(name = "EVENT_NAME", nullable = false) @Enumerated(EnumType.STRING)
+	@Column(name = "EVENT_TYPE", nullable = false) @Enumerated(EnumType.STRING)
 	private EventType eventType;
 
 	@Column(name = "EVENT_PAYLOAD", columnDefinition = "JSON")
@@ -84,5 +87,9 @@ public class ApplicationEvent implements Persistable<String> {
 
 	@Override public boolean isNew() {
 		return a == null;
+	}
+
+	public void onComplete() {
+		this.eventStatus = EventStatus.COMPLETED;
 	}
 }

@@ -1,19 +1,19 @@
 package com.example.awssqspilot.springboot.listener;
 
 import com.example.awssqspilot.domain.event.EventType;
-import com.example.awssqspilot.messaging.model.ApplicationEventMessage;
-import com.example.awssqspilot.springboot.messaging.context.EventTypeDispatcher;
-import com.example.awssqspilot.springboot.messaging.sqs.SqsMessageHeaders;
+import com.example.awssqspilot.domain.model.ApplicationEventMessage;
+import com.example.awssqspilot.messaging.context.EventTypeDispatcher;
+import com.example.awssqspilot.messaging.concrete.sqs.SqsMessageHeaders;
 import com.example.awssqspilot.util.AcknowledgmentUtils;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.atomic.AtomicInteger;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.aws.messaging.listener.Acknowledgment;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.support.TransactionTemplate;
 
 
 @Slf4j
@@ -21,9 +21,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class SqsMessageHandler {
 
+	private final TransactionTemplate transactionTemplate;
 	private final AsyncTaskExecutor eventWorkerPool;
 	private final EventTypeDispatcher eventTypeDispatcher;
-	private final AtomicInteger atomicInteger = new AtomicInteger(0);
+	@Value("${cloud.aws.sqs.backOffTime}")
+	private Long backOffTime;
 
 	public void handle(
 			final ApplicationEventMessage message,
@@ -34,40 +36,59 @@ public class SqsMessageHandler {
 		try {
 			eventWorkerPool.submit(() -> {
 
-				final Object result;
 				try {
-					if (callback != null) {
-						callback.onStart(message, messageHeaders);
-					}
 
-					EventType eventType = getEventType(messageHeaders);
-
-					result = eventTypeDispatcher.doDispatch(eventType, message.getEventPayload());
-
-					AcknowledgmentUtils.ack(acknowledgment);
+					transactionTemplate.execute(status ->
+							doTransaction(message, messageHeaders, acknowledgment, callback)
+					);
 
 				} catch (Exception e) {
 
-					log.error("Exception", e);
+					log.error("EventWorkerPool Exception occurred", e);
 
 					if (callback != null) {
 						callback.onError(message, messageHeaders, e);
 					}
+
+					try {
+						// noinspection BusyWait
+						Thread.sleep(backOffTime);
+					} catch (InterruptedException ie) {
+						Thread.currentThread().interrupt();
+					}
+
 					throw new RuntimeException(e);
 				}
 
-				final var andIncrement = atomicInteger.incrementAndGet();
-				log.info("procee {}", andIncrement);
-				if (callback != null) {
-					callback.onComplete(message, messageHeaders, result);
-				}
 
 			});
+
 		} catch (RejectedExecutionException e) {
-			log.error("eventThreadPool is full. {}", e.getMessage());
+			log.error("eventThreadPool Queue is full. {}", e.getMessage());
+			throw e;
 		}
 
 
+	}
+
+	private Object doTransaction(final ApplicationEventMessage message, final MessageHeaders messageHeaders, final Acknowledgment acknowledgment,
+			final MessageHandlerCallback<ApplicationEventMessage, Object> callback) {
+
+		if (callback != null) {
+			callback.onStart(message, messageHeaders);
+		}
+
+		EventType eventType = getEventType(messageHeaders);
+
+		final Object result = eventTypeDispatcher.doDispatch(eventType, message.getEventPayload());
+
+		AcknowledgmentUtils.ack(acknowledgment);
+
+		if (callback != null) {
+			callback.onComplete(message, messageHeaders, result);
+		}
+
+		return result;
 	}
 
 	private EventType getEventType(final MessageHeaders messageHeaders) {

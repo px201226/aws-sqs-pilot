@@ -1,4 +1,4 @@
-package com.example.awssqspilot.springboot.messaging.context;
+package com.example.awssqspilot.messaging.context;
 
 
 import com.example.awssqspilot.domain.event.EventType;
@@ -23,6 +23,11 @@ public class EventTypeDispatcher {
 	public Object doDispatch(EventType eventType, Object payLoad) {
 
 		final var eventTypeAdvice = processor.getEventTypeAdvice(eventType);
+
+		if (eventTypeAdvice == null) {
+			log.info("not found EventTypeMapping bean for EventType. eventType = {}", eventType);
+			return null;
+		}
 
 		final var beanName = eventTypeAdvice.getBeanName();
 		final var method = eventTypeAdvice.getMethod();

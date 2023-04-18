@@ -1,4 +1,4 @@
-package com.example.awssqspilot.springboot.messaging.sqs;
+package com.example.awssqspilot.messaging.concrete.sqs;
 
 import java.util.Map;
 

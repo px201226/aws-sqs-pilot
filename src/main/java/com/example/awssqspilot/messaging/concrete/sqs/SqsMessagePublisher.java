@@ -1,4 +1,4 @@
-package com.example.awssqspilot.springboot.messaging.sqs;
+package com.example.awssqspilot.messaging.concrete.sqs;
 
 import com.example.awssqspilot.messaging.channel.MessageChannel;
 import com.example.awssqspilot.messaging.message.MessagePublisher;

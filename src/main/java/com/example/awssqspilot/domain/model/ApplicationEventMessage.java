@@ -1,4 +1,4 @@
-package com.example.awssqspilot.messaging.model;
+package com.example.awssqspilot.domain.model;
 
 import com.example.awssqspilot.domain.event.ApplicationEvent;
 import com.example.awssqspilot.domain.event.EventStatus;

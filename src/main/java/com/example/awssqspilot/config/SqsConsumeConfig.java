@@ -2,6 +2,7 @@ package com.example.awssqspilot.config;
 
 import com.amazonaws.services.sqs.AmazonSQSAsync;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.aws.messaging.config.SimpleMessageListenerContainerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +12,8 @@ import org.springframework.context.annotation.Configuration;
 public class SqsConsumeConfig {
 
 	private final AmazonSQSAsync amazonSQSAsync;
+	@Value("${cloud.aws.sqs.backOffTime}")
+	private Long backOffTime;
 
 	@Bean
 	public SimpleMessageListenerContainerFactory simpleMessageListenerContainerFactory() {
@@ -19,7 +22,7 @@ public class SqsConsumeConfig {
 		factory.setMaxNumberOfMessages(10);
 		factory.setWaitTimeOut(20);// Long polling 설정 0~20
 		factory.setAutoStartup(true);
-		factory.setBackOffTime(5000L);
+		factory.setBackOffTime(backOffTime);
 		return factory;
 	}
 
