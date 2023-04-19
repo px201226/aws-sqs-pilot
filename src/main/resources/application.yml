@@ -75,3 +75,8 @@ logging:
         hikari.HikariConfig: info
         hikari: info
   #    org.springframework.cache: trace # 서버가 기동될때, @Cache관련 어노테이션 메소드들이 등록되는지 확인가능.(AbstractFallbackCacheOperationSource)
+
+redis:
+  event:
+    host: localhost
+    port: 6379

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class OutBoxProtocol<T extends SqsMessage> implements MessageHandlerCallback<SqsMessage, Object> {
+public class RdbOutBoxProtocol<T extends SqsMessage> implements MessageHandlerCallback<SqsMessage, Object> {
 
 	private final ApplicationEventRepository applicationEventRepository;
 

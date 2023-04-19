@@ -17,6 +17,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Persistable;
+import org.springframework.data.redis.core.RedisHash;
 
 @Getter
 @Builder(builderMethodName = "entityBuilder", toBuilder = true)
@@ -24,7 +25,7 @@ import org.springframework.data.domain.Persistable;
 @Entity @Table(name = "APPLICATION_EVENT", catalog = "MARKETBOM2_SCHM")
 public class ApplicationEvent implements Persistable<String> {
 
-	@Id
+	@Id @org.springframework.data.annotation.Id
 	@Column(name = "EVENT_ID", nullable = false)
 	private String eventId;
 

@@ -33,6 +33,8 @@ dependencies {
     // aws sqs
     implementation 'org.springframework.cloud:spring-cloud-aws-autoconfigure:2.2.1.RELEASE'
     implementation 'org.springframework.cloud:spring-cloud-aws-messaging:2.2.1.RELEASE'
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
 
 tasks.named('test') {

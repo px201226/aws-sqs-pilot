@@ -1,6 +1,7 @@
 package com.example.awssqspilot.domain.service;
 
 import com.example.awssqspilot.domain.event.ApplicationEvent;
+import com.example.awssqspilot.domain.event.ApplicationEventRedisRepository;
 import com.example.awssqspilot.domain.event.ApplicationEventRepository;
 import com.example.awssqspilot.domain.event.EventSource;
 import com.example.awssqspilot.domain.event.EventType;
@@ -15,10 +16,22 @@ import org.springframework.transaction.annotation.Transactional;
 public class ApplicationEventService {
 
 	private final ApplicationEventRepository applicationEventRepository;
+	private final ApplicationEventRedisRepository applicationEventRedisRepository;
 
 	@Transactional
-	public ApplicationEvent recordApplicationEvent(final EventSource event, final String eventPayload) {
-		final var applicationEvent = ApplicationEvent.createEvent(
+	public ApplicationEvent recordApplicationEventByRdb(final EventSource event, final String eventPayload) {
+		final var applicationEvent = getApplicationEvent(event, eventPayload);
+		return applicationEventRepository.save(applicationEvent);
+	}
+
+	@Transactional
+	public ApplicationEvent recordApplicationEventByRedis(final EventSource event, final String eventPayload) {
+		final var applicationEvent = getApplicationEvent(event, eventPayload);
+		return applicationEventRedisRepository.save(applicationEvent);
+	}
+
+	public ApplicationEvent getApplicationEvent(final EventSource event, final String eventPayload) {
+		return ApplicationEvent.createEvent(
 				event.getEventId(),
 				event.getEventGroupId(),
 				event.getBizGroupNo(),
@@ -27,6 +40,5 @@ public class ApplicationEventService {
 				eventPayload
 		);
 
-		return applicationEventRepository.save(applicationEvent);
 	}
 }

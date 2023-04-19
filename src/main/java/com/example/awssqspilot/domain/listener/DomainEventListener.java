@@ -6,11 +6,9 @@ import com.example.awssqspilot.domain.event.EventType;
 import com.example.awssqspilot.domain.service.ApplicationEventService;
 import com.example.awssqspilot.messaging.channel.MessageChannel;
 import com.example.awssqspilot.messaging.concrete.sqs.SqsMessagePublisher;
-import com.example.awssqspilot.messaging.message.MessagePublisher;
 import com.example.awssqspilot.domain.model.ApplicationEventMessage;
 import com.example.awssqspilot.messaging.annotation.MessageTypeMapping;
 import com.example.awssqspilot.messaging.concrete.sqs.SqsMessageHeaders;
-import com.example.awssqspilot.messaging.message.MessageType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
@@ -18,7 +16,6 @@ import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
-import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
@@ -45,11 +42,25 @@ public class DomainEventListener {
 	}
 
 
+//	@EventListener
+//	@TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
+//	public void sqsPublishListenerWithRDB(DomainEventModel.RegisteredBizSlipTrade event) throws JsonProcessingException, InterruptedException {
+//
+//		final var applicationEvent = applicationEventService.recordApplicationEvent(event, objectMapper.writeValueAsString(event));
+//		final var applicationEventMessage = ApplicationEventMessage.from(applicationEvent);
+//
+//		sqsMessagePublisher.send(
+//				MessageChannel.MASS_DATA_REG_CHANNEL,
+//				MessageBuilder.createMessage(applicationEventMessage, new MessageHeaders(getSqsMessageHeader(event)))
+//		);
+//
+//	}
+
 	@EventListener
 	@TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
-	public void sqsPublishListener(DomainEventModel.RegisteredBizSlipTrade event) throws JsonProcessingException, InterruptedException {
+	public void sqsPublishListenerWithRedis(DomainEventModel.RegisteredBizSlipTrade event) throws JsonProcessingException, InterruptedException {
 
-		final var applicationEvent = applicationEventService.recordApplicationEvent(event, objectMapper.writeValueAsString(event));
+		final var applicationEvent = applicationEventService.recordApplicationEventByRedis(event, objectMapper.writeValueAsString(event));
 		final var applicationEventMessage = ApplicationEventMessage.from(applicationEvent);
 
 		sqsMessagePublisher.send(
