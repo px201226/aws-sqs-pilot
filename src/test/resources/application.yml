@@ -19,6 +19,7 @@ spring:
       username: ${MARKETBOM2_DATASOURCE_USERNAME}
       password: ${MARKETBOM2_DATASOURCE_PASSWORD}
 
+
 cloud:
   aws:
     region:
@@ -39,6 +40,8 @@ cloud:
       private: ${MARKETBOM2_PRIVATE_BUCKET}
       common: # ?? ??
         private: ${COMMON_PRIVATE_BUCKET}
+    sqs:
+      backOffTime: 5000
 
 logging:
   config: ${MARKETBOM2_LOG_CONFIG_PATH:classpath:logback.xml}

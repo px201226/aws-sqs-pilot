@@ -1,8 +1,6 @@
-package com.example.awssqspilot.springboot.listener;
-
+package com.example.awssqspilot.springboot.messaging.context;
 
 import com.example.awssqspilot.domain.model.ApplicationEventMessage;
-import com.example.awssqspilot.messaging.concrete.sqs.SqsChannelResolver;
 import com.example.awssqspilot.messaging.concrete.sqs.SqsMessage;
 import com.example.awssqspilot.messaging.concrete.sqs.SqsMessageHandler;
 import lombok.RequiredArgsConstructor;
@@ -10,23 +8,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.aws.messaging.listener.Acknowledgment;
 import org.springframework.cloud.aws.messaging.listener.SqsMessageDeletionPolicy;
 import org.springframework.cloud.aws.messaging.listener.annotation.SqsListener;
-import org.springframework.context.annotation.Profile;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
-@Profile("dev")
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class SqsMessageListener {
+public class MySqsListener {
 
 	private final SqsMessageHandler sqsMessageHandler;
-	private final OutBoxProtocol outBoxProtocol;
 
-	@SqsListener(value = SqsChannelResolver.FIFO_QUEUE_NAME, deletionPolicy = SqsMessageDeletionPolicy.NEVER)
-	public void handle(@Payload SqsMessage message, MessageHeaders messageHeaders, Acknowledgment acknowledgment) throws InterruptedException {
-		sqsMessageHandler.handle(message, messageHeaders, acknowledgment, outBoxProtocol);
+	@SqsListener(value = "async_ff.fifo", deletionPolicy = SqsMessageDeletionPolicy.NEVER)
+	public void handle(@Payload SqsMessageModel message, MessageHeaders messageHeaders, Acknowledgment acknowledgment) {
+		sqsMessageHandler.handle(message, messageHeaders, acknowledgment, null);
 	}
 
 }

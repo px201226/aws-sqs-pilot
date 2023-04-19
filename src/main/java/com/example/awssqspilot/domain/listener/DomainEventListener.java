@@ -5,6 +5,7 @@ import com.example.awssqspilot.domain.dto.DomainEventModel;
 import com.example.awssqspilot.domain.event.EventType;
 import com.example.awssqspilot.domain.service.ApplicationEventService;
 import com.example.awssqspilot.messaging.channel.MessageChannel;
+import com.example.awssqspilot.messaging.concrete.sqs.SqsMessagePublisher;
 import com.example.awssqspilot.messaging.message.MessagePublisher;
 import com.example.awssqspilot.domain.model.ApplicationEventMessage;
 import com.example.awssqspilot.messaging.annotation.MessageTypeMapping;
@@ -29,7 +30,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @RequiredArgsConstructor
 public class DomainEventListener {
 
-	private final MessagePublisher<Message, Boolean> sqsMessagePublisher;
+	private final SqsMessagePublisher sqsMessagePublisher;
 	private final ApplicationEventService applicationEventService;
 	private final ObjectMapper objectMapper;
 	private final EntityManager entityManager;

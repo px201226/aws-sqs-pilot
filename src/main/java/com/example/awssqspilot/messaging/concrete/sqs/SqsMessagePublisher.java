@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class SqsMessagePublisher<T extends Message> implements MessagePublisher<Message, Boolean> {
+public class SqsMessagePublisher<T extends SqsMessage> implements MessagePublisher<Message<SqsMessage>, Boolean> {
 
 	private final QueueMessagingTemplate queueMessagingTemplate;
 	private final SqsChannelResolver resolver;
@@ -21,7 +21,7 @@ public class SqsMessagePublisher<T extends Message> implements MessagePublisher<
 		return resolver.isSupportChannel(messageChannel);
 	}
 
-	@Override public MessageSender<Message, Boolean> getMessageSender() {
+	@Override public MessageSender<Message<SqsMessage>, Boolean> getMessageSender() {
 		return (channel, message) -> {
 			queueMessagingTemplate.convertAndSend(
 					resolver.resolve(channel),
@@ -34,5 +34,7 @@ public class SqsMessagePublisher<T extends Message> implements MessagePublisher<
 		};
 	}
 
-
+	@Override public Boolean send(final MessageChannel messageChannel, final Message<SqsMessage> message) {
+		return MessagePublisher.super.send(messageChannel, message);
+	}
 }

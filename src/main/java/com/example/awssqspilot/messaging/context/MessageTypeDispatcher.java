@@ -42,6 +42,10 @@ public class MessageTypeDispatcher {
 		try {
 			final Class<?>[] parameterTypes = method.getParameterTypes();
 			final Class<?> parameterType = parameterTypes[0];
+			if (parameterType.isAssignableFrom(String.class)) {
+				return method.invoke(targetBean, payLoad);
+			}
+
 			final Object o = objectMapper.readValue(payLoad.toString(), parameterType);
 			return method.invoke(targetBean, o);
 		} catch (IllegalAccessException e) {
