@@ -2,10 +2,9 @@ package com.example.awssqspilot.springboot.listener;
 
 
 import com.example.awssqspilot.domain.model.ApplicationEventMessage;
-import com.example.awssqspilot.messaging.concrete.sqs.SqsChannelResolver;
-import com.example.awssqspilot.messaging.concrete.sqs.SqsMessage;
-import com.example.awssqspilot.messaging.concrete.sqs.SqsMessageHandler;
-import com.example.awssqspilot.messaging.message.MessageHandlerCallback;
+import com.marketboro2.advancesqs.messaging.concrete.sqs.SqsChannelResolver;
+import com.marketboro2.advancesqs.messaging.concrete.sqs.SqsMessageHandler;
+import com.marketboro2.advancesqs.messaging.message.MessageHandlerCallback;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.aws.messaging.listener.Acknowledgment;

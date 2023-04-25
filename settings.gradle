@@ -1,1 +1,3 @@
 rootProject.name = 'aws-sqs-pilot'
+
+include ':advance-sqs'

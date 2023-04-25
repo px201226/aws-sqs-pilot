@@ -2,11 +2,9 @@ package com.example.awssqspilot.springboot.controller;
 
 
 import com.example.awssqspilot.domain.dto.DomainEventModel.RegisteredBizSlipTrade;
-import com.example.awssqspilot.messaging.channel.MessageChannel;
-import com.example.awssqspilot.messaging.message.MessagePublisher;
 import com.example.awssqspilot.util.UuidUtils;
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
+import com.marketboro2.advancesqs.messaging.channel.MessageChannel;
+import com.marketboro2.advancesqs.messaging.message.MessagePublisher;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Slf4j

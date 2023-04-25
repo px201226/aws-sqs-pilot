@@ -3,7 +3,7 @@ package com.example.awssqspilot.domain.model;
 import com.example.awssqspilot.domain.event.ApplicationEvent;
 import com.example.awssqspilot.domain.event.EventStatus;
 import com.example.awssqspilot.domain.event.EventType;
-import com.example.awssqspilot.messaging.concrete.sqs.SqsMessage;
+import com.marketboro2.advancesqs.messaging.concrete.sqs.SqsMessage;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

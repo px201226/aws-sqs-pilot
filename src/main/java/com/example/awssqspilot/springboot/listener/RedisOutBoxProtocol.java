@@ -2,8 +2,8 @@ package com.example.awssqspilot.springboot.listener;
 
 import com.example.awssqspilot.domain.event.ApplicationEventRedisRepository;
 import com.example.awssqspilot.domain.event.EventStatus;
-import com.example.awssqspilot.messaging.concrete.sqs.SqsMessage;
-import com.example.awssqspilot.messaging.message.MessageHandlerCallback;
+import com.marketboro2.advancesqs.messaging.concrete.sqs.SqsMessage;
+import com.marketboro2.advancesqs.messaging.message.MessageHandlerCallback;
 import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.MessageHeaders;
